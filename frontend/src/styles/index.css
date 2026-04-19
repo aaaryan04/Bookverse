@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #8b5cf6;
+  --dark-bg: #0f172a;
+  --light-bg: #f8fafc;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+  transition: all 0.3s ease;
+}
+
+body.dark {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+/* Utility Classes */
+.container-custom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn-primary {
+  @apply px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition;
+}
+
+.btn-secondary {
+  @apply px-6 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition;
+}
+
+.btn-outline {
+  @apply px-6 py-2 border-2 border-indigo-600 text-indigo-600 rounded-lg font-medium hover:bg-indigo-50 transition;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition;
+}
+
+.card.dark {
+  @apply bg-slate-800 text-white;
+}
+
+.input-field {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition;
+}
+
+.input-field.dark {
+  @apply bg-slate-700 border-slate-600 text-white;
+}
+
+.badge {
+  @apply inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container-custom {
+    padding: 0 16px;
+  }
+}
