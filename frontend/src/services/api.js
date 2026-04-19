@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // ✅ Properly define API URL
-const API_URL = import.meta.env.VITE_API_URL || 'https://bookverse-q7on.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://bookverse-q7on.onrender.com';
 
 console.log("API URL:", API_URL); // debug
 
