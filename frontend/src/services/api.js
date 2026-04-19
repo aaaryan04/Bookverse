@@ -1,63 +1,76 @@
-import axios from 'axios';
+import axios from "axios";
 
-// ✅ Properly define API URL
-const API_URL = import.meta.env.VITE_API_URL || 'https://bookverse-q7on.onrender.com';
+// ✅ Always use VITE env (must be set in Vercel)
+const API_URL = import.meta.env.VITE_API_URL;
 
-console.log("API URL:", API_URL); // debug
+// 🚨 Fail fast if missing (helps debugging)
+if (!API_URL) {
+  throw new Error("VITE_API_URL is not defined. Check Vercel env variables.");
+}
 
+console.log("✅ API URL:", API_URL);
+
+// ✅ Axios instance
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-// Add token to requests
+// ✅ Attach token automatically
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Auth APIs
+
+// ================= AUTH APIs =================
 export const authAPI = {
-  register: (data) => apiClient.post('/auth/register', data),
-  login: (data) => apiClient.post('/auth/login', data),
-  getProfile: () => apiClient.get('/auth/profile'),
-  updateProfile: (data) => apiClient.put('/auth/profile', data),
+  register: (data) => apiClient.post("/auth/register", data),
+  login: (data) => apiClient.post("/auth/login", data),
+  getProfile: () => apiClient.get("/auth/profile"),
+  updateProfile: (data) => apiClient.put("/auth/profile", data),
 };
 
-// Book APIs
+
+// ================= BOOK APIs =================
 export const bookAPI = {
-  getAllBooks: (params) => apiClient.get('/books', { params }),
+  getAllBooks: (params) => apiClient.get("/books", { params }),
   getBook: (id) => apiClient.get(`/books/${id}`),
   searchBooks: (query, filters) =>
-    apiClient.get('/books/search', { params: { q: query, ...filters } }),
-  getFeaturedBooks: () => apiClient.get('/books/featured'),
-  getTrendingBooks: () => apiClient.get('/books/trending'),
+    apiClient.get("/books/search", { params: { q: query, ...filters } }),
+  getFeaturedBooks: () => apiClient.get("/books/featured"),
+  getTrendingBooks: () => apiClient.get("/books/trending"),
   getRelatedBooks: (id) => apiClient.get(`/books/${id}/related`),
-  getCategories: () => apiClient.get('/books/categories'),
+  getCategories: () => apiClient.get("/books/categories"),
 };
 
-// Cart APIs
+
+// ================= CART APIs =================
 export const cartAPI = {
-  getCart: () => apiClient.get('/cart'),
-  addToCart: (data) => apiClient.post('/cart', data),
-  updateCartItem: (bookId, data) => apiClient.put(`/cart/${bookId}`, data),
-  removeFromCart: (bookId) => apiClient.delete(`/cart/${bookId}`),
-  clearCart: () => apiClient.delete('/cart'),
+  getCart: () => apiClient.get("/cart"),
+  addToCart: (data) => apiClient.post("/cart", data),
+  updateCartItem: (bookId, data) =>
+    apiClient.put(`/cart/${bookId}`, data),
+  removeFromCart: (bookId) =>
+    apiClient.delete(`/cart/${bookId}`),
+  clearCart: () => apiClient.delete("/cart"),
 };
 
-// Order APIs
+
+// ================= ORDER APIs =================
 export const orderAPI = {
-  createOrder: (data) => apiClient.post('/orders', data),
-  getUserOrders: (params) => apiClient.get('/orders', { params }),
+  createOrder: (data) => apiClient.post("/orders", data),
+  getUserOrders: (params) => apiClient.get("/orders", { params }),
   getOrder: (id) => apiClient.get(`/orders/${id}`),
 };
 
-// Review APIs
+
+// ================= REVIEW APIs =================
 export const reviewAPI = {
   getBookReviews: (bookId, params) =>
     apiClient.get(`/books/${bookId}/reviews`, { params }),
@@ -69,11 +82,14 @@ export const reviewAPI = {
     apiClient.delete(`/reviews/${reviewId}`),
 };
 
-// Reading Progress APIs
+
+// ================= READING PROGRESS =================
 export const readingProgressAPI = {
   getProgress: (bookId) => apiClient.get(`/reading/${bookId}`),
-  getUserProgress: (params) => apiClient.get('/reading', { params }),
-  startReading: (bookId) => apiClient.post(`/reading/${bookId}/start`),
+  getUserProgress: (params) =>
+    apiClient.get("/reading", { params }),
+  startReading: (bookId) =>
+    apiClient.post(`/reading/${bookId}/start`),
   updateProgress: (bookId, data) =>
     apiClient.put(`/reading/${bookId}`, data),
   addBookmark: (bookId, data) =>
@@ -82,12 +98,17 @@ export const readingProgressAPI = {
     apiClient.post(`/reading/${bookId}/note`, data),
 };
 
-// Wishlist APIs
+
+// ================= WISHLIST APIs =================
 export const wishlistAPI = {
-  getWishlist: () => apiClient.get('/wishlist'),
-  addToWishlist: (bookId) => apiClient.post(`/wishlist/${bookId}`),
-  removeFromWishlist: (bookId) => apiClient.delete(`/wishlist/${bookId}`),
-  isInWishlist: (bookId) => apiClient.get(`/wishlist/${bookId}`),
+  getWishlist: () => apiClient.get("/wishlist"),
+  addToWishlist: (bookId) =>
+    apiClient.post(`/wishlist/${bookId}`),
+  removeFromWishlist: (bookId) =>
+    apiClient.delete(`/wishlist/${bookId}`),
+  isInWishlist: (bookId) =>
+    apiClient.get(`/wishlist/${bookId}`),
 };
+
 
 export default apiClient;
