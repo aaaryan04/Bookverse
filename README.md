@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Smart Online Book Store + eBook Platform
 
 A modern, production-ready full-stack application for browsing, purchasing, and reading eBooks with intelligent recommendations.
@@ -618,3 +619,6 @@ MIT License - feel free to use this project!
 ---
 
 **Built with ❤️ by Your Development Team**
+=======
+# Bookverse
+>>>>>>>
