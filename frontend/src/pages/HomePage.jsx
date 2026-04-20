@@ -89,13 +89,13 @@ const HomePage = () => {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <button
                 onClick={() => navigate('/books')}
-                className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-slate-900/10 hover:bg-slate-100 transition"
+                className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/20 hover:bg-indigo-700 transition"
               >
                 Browse Books <FiArrowRight className="ml-2" />
               </button>
               <button
                 onClick={() => navigate('/books?trending=true')}
-                className="inline-flex items-center justify-center rounded-full bg-white/10 border border-white/20 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition"
+                className="inline-flex items-center justify-center rounded-full bg-indigo-500/90 border border-indigo-400/30 px-8 py-3 text-sm font-semibold text-white hover:bg-indigo-600 transition"
               >
                 Trending Now
               </button>
@@ -142,35 +142,29 @@ const HomePage = () => {
 
       {/* Categories Section */}
       <section className="py-16 container-custom">
-        <h2 className="text-3xl font-bold mb-8">Browse by Category</h2>
+        <h2 className="text-3xl font-bold mb-8 text-white">Browse by Category</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {categories.map((cat) => (
             <button
               key={cat.category}
               onClick={() => navigate(`/books?category=${cat.category}`)}
-              className={`p-4 rounded-lg text-center font-medium transition hover:shadow-lg ${
-                isDark
-                  ? 'bg-slate-800 hover:bg-slate-700 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200'
-              }`}
+              className="p-4 rounded-3xl bg-slate-900 border border-slate-800 text-left text-slate-100 transition hover:bg-slate-800 shadow-lg shadow-slate-950/20"
             >
               <div className="text-2xl mb-2">{cat.category}</div>
-              <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                {cat.count} books
-              </div>
+              <div className="text-sm text-slate-400">{cat.count} books</div>
             </button>
           ))}
         </div>
       </section>
 
       {/* Featured Books */}
-      <section className={`py-16 ${isDark ? 'bg-slate-800' : 'bg-gray-100'}`}>
+      <section className="py-16 bg-slate-950">
         <div className="container-custom">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Featured Books</h2>
+            <h2 className="text-3xl font-bold text-white">Featured Books</h2>
             <button
               onClick={() => navigate('/books?featured=true')}
-              className="text-indigo-600 font-medium hover:text-indigo-700 transition flex items-center gap-2"
+              className="text-indigo-300 font-medium hover:text-indigo-100 transition flex items-center gap-2"
             >
               View All <FiArrowRight />
             </button>
@@ -214,39 +208,21 @@ const HomePage = () => {
       </section>
 
       {/* Features */}
-      <section className={`py-16 ${isDark ? 'bg-slate-800' : 'bg-gray-100'}`}>
+      <section className="py-16 bg-slate-950">
         <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-12 text-center">Why Choose Us?</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center text-white">Why Choose Us?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div
-              className={`p-8 rounded-lg text-center ${
-                isDark
-                  ? 'bg-slate-700 text-white'
-                  : 'bg-white text-gray-900'
-              }`}
-            >
+            <div className="p-8 rounded-3xl bg-slate-900 text-white shadow-lg shadow-slate-950/20 text-center">
               <div className="text-4xl mb-4">📖</div>
               <h3 className="text-xl font-bold mb-2">Vast Library</h3>
               <p>Access thousands of books across all genres and categories</p>
             </div>
-            <div
-              className={`p-8 rounded-lg text-center ${
-                isDark
-                  ? 'bg-slate-700 text-white'
-                  : 'bg-white text-gray-900'
-              }`}
-            >
+            <div className="p-8 rounded-3xl bg-slate-900 text-white shadow-lg shadow-slate-950/20 text-center">
               <div className="text-4xl mb-4">⚡</div>
               <h3 className="text-xl font-bold mb-2">Instant Access</h3>
               <p>Start reading immediately after purchase, no waiting</p>
             </div>
-            <div
-              className={`p-8 rounded-lg text-center ${
-                isDark
-                  ? 'bg-slate-700 text-white'
-                  : 'bg-white text-gray-900'
-              }`}
-            >
+            <div className="p-8 rounded-3xl bg-slate-900 text-white shadow-lg shadow-slate-950/20 text-center">
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-xl font-bold mb-2">Track Progress</h3>
               <p>Monitor your reading progress with bookmarks and notes</p>

@@ -82,7 +82,7 @@ const BooksPage = () => {
   return (
     <div className={`min-h-screen transition ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
       <section className="py-16 container-custom">
-        <div className="mb-8 flex flex-col gap-6 rounded-[2rem] bg-white/90 p-8 shadow-2xl shadow-slate-900/10 backdrop-blur-xl border border-slate-200/70 dark:bg-slate-900/90 dark:border-slate-700/70">
+        <div className="mb-8 flex flex-col gap-6 rounded-[2rem] bg-slate-950/95 p-8 shadow-2xl shadow-slate-950/20 backdrop-blur-xl border border-slate-800">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <button
@@ -117,7 +117,7 @@ const BooksPage = () => {
               <button
                 type="button"
                 onClick={() => navigate('/books')}
-                className="rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-200 transition"
+                className="rounded-full bg-slate-800 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-700 transition"
               >
                 All Books
               </button>
@@ -130,22 +130,22 @@ const BooksPage = () => {
               <h2 className="mt-4 text-3xl font-bold">Browse top picks</h2>
               <p className="mt-3 text-sm leading-6 text-indigo-100/90">Handpicked titles that readers love and rate highly.</p>
             </div>
-            <div className="rounded-3xl bg-white p-6 shadow-lg border border-slate-200">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-indigo-600">Categories</p>
+            <div className="rounded-3xl bg-slate-900 p-6 shadow-lg border border-slate-800">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-indigo-300">Categories</p>
               <div className="mt-5 grid gap-3">
                 {categories.slice(0, 4).map((cat) => (
                   <button
                     key={cat.category}
                     onClick={() => navigate(`/books?category=${cat.category}`)}
-                    className="rounded-2xl border border-slate-200 px-4 py-3 text-left text-sm font-medium text-slate-900 hover:bg-slate-50 transition"
+                    className="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-left text-sm font-medium text-slate-100 hover:bg-slate-900 transition"
                   >
-                    {cat.category} <span className="text-slate-500">({cat.count})</span>
+                    {cat.category} <span className="text-slate-400">({cat.count})</span>
                   </button>
                 ))}
               </div>
             </div>
-            <div className="rounded-3xl bg-white p-6 shadow-lg border border-slate-200">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-indigo-600">Why Shop Here</p>
+            <div className="rounded-3xl bg-slate-900 p-6 shadow-lg border border-slate-800">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-indigo-300">Why Shop Here</p>
               <ul className="mt-5 space-y-3 text-sm text-slate-600">
                 <li>• Instant digital access</li>
                 <li>• Curated trending collections</li>

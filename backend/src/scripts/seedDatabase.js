@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connectDB = require('../config/database');
 const Book = require('../models/Book');
 
-const seedBooks = [
+const baseSeedBooks = [
   {
     title: 'Clean Code',
     author: 'Robert C. Martin',
@@ -222,6 +222,63 @@ const seedBooks = [
     tags: ['psychology', 'finance', 'behavior'],
   },
 ];
+
+const generateAdditionalBooks = () => {
+  const categories = [
+    'Programming',
+    'Self-Development',
+    'Fiction',
+    'Business',
+    'Psychology',
+    'Cybersecurity',
+    'History',
+    'Science',
+    'Art',
+    'Fantasy',
+  ];
+
+  const tags = {
+    Programming: ['coding', 'software', 'development'],
+    'Self-Development': ['growth', 'habits', 'motivation'],
+    Fiction: ['fiction', 'story', 'adventure'],
+    Business: ['business', 'leadership', 'strategy'],
+    Psychology: ['mind', 'behavior', 'emotion'],
+    Cybersecurity: ['security', 'encryption', 'privacy'],
+    History: ['history', 'culture', 'events'],
+    Science: ['science', 'research', 'discovery'],
+    Art: ['art', 'creativity', 'design'],
+    Fantasy: ['fantasy', 'magic', 'worldbuilding'],
+  };
+
+  return Array.from({ length: 92 }, (_, index) => {
+    const id = index + 1;
+    const category = categories[index % categories.length];
+    const basePrice = 12 + (index % 8) * 4;
+    const hasDiscount = index % 3 === 0;
+
+    return {
+      title: `${category} Guide ${id}`,
+      author: `Author ${id}`,
+      description: `A compelling ${category.toLowerCase()} book that helps readers improve understanding and skills in ${category.toLowerCase()}.`,
+      category,
+      price: basePrice + 4.99,
+      discountedPrice: hasDiscount ? basePrice + 1.99 : undefined,
+      rating: 4.0 + ((index % 5) * 0.1),
+      coverImage: `https://picsum.photos/seed/book${id}/400/600`,
+      pages: 180 + (index % 7) * 40,
+      publicationDate: new Date(`20${10 + (index % 13)}-0${(index % 9) + 1}-15`),
+      isbn: `978-0000000${100 + id}`,
+      language: 'English',
+      format: 'eBook',
+      stock: 40 + ((index % 10) * 10),
+      isFeatured: index % 10 === 0,
+      isTrending: index % 7 === 0,
+      tags: tags[category],
+    };
+  });
+};
+
+const seedBooks = [...baseSeedBooks, ...generateAdditionalBooks()];
 
 const seedDatabase = async () => {
   try {
