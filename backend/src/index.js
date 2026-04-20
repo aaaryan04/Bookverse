@@ -48,7 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/books', reviewRoutes);
+app.use('/api', reviewRoutes);
 app.use('/api/reading', readingProgressRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 

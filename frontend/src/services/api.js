@@ -1,16 +1,13 @@
 import axios from "axios";
 
-// ✅ Always use VITE env (must be set in Vercel)
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://bookverse-q7on.onrender.com/api";
 
-// 🚨 Fail fast if missing (helps debugging)
 if (!API_URL) {
-  throw new Error("VITE_API_URL is not defined. Check Vercel env variables.");
+  throw new Error("REACT_APP_API_URL is not defined.");
 }
 
-console.log("✅ API URL:", API_URL);
-
-// ✅ Axios instance
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {

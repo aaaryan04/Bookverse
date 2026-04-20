@@ -23,13 +23,13 @@ router.post('/:bookId/reviews', authMiddleware, validateRequest(reviewSchema), r
  * @desc    Update review
  * @access  Private
  */
-router.put('/:reviewId', authMiddleware, reviewController.updateReview);
+router.put('/reviews/:reviewId', authMiddleware, reviewController.updateReview);
 
 /**
  * @route   DELETE /api/reviews/:reviewId
  * @desc    Delete review
  * @access  Private
  */
-router.delete('/:reviewId', authMiddleware, reviewController.deleteReview);
+router.delete('/reviews/:reviewId', authMiddleware, reviewController.deleteReview);
 
 module.exports = router;
