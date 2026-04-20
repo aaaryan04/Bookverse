@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { FiSearch, FiShoppingCart, FiUser, FiLogOut, FiMenu, FiX, FiMoon, FiSun } from 'react-icons/fi';
-import { bookAPI, cartAPI } from '../services/api';
 import { toast } from 'react-toastify';
 
 const Header = () => {
@@ -12,7 +11,7 @@ const Header = () => {
   const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount] = useState(0);
 
   const handleSearch = async (e) => {
     e.preventDefault();

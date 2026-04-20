@@ -20,20 +20,20 @@ const CartPage = () => {
   });
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    const fetchCart = async () => {
+      try {
+        const response = await cartAPI.getCart();
+        setCart(response.data.cart);
+      } catch (error) {
+        toast.error('Error loading cart');
+        navigate('/books');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchCart = async () => {
-    try {
-      const response = await cartAPI.getCart();
-      setCart(response.data.cart);
-    } catch (error) {
-      toast.error('Error loading cart');
-      navigate('/books');
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchCart();
+  }, [navigate]);
 
   const handleUpdateQuantity = async (bookId, quantity) => {
     try {

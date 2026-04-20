@@ -2,9 +2,9 @@ const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const bookRoutes = require('../../src/routes/bookRoutes');
-const Book = require('../../src/models/Book');
-const errorHandler = require('../../src/middleware/errorHandler');
+const bookRoutes = require('../src/routes/bookRoutes');
+const Book = require('../src/models/Book');
+const errorHandler = require('../src/middleware/errorHandler');
 
 let mongoServer;
 

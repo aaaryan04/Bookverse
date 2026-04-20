@@ -15,26 +15,26 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const [featuredRes, trendingRes, categoriesRes] = await Promise.all([
+          bookAPI.getFeaturedBooks(),
+          bookAPI.getTrendingBooks(),
+          bookAPI.getCategories(),
+        ]);
+
+        setFeatured(featuredRes.data.books);
+        setTrending(trendingRes.data.books);
+        setCategories(categoriesRes.data.categories);
+      } catch (error) {
+        console.error('Error fetching home data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchHomeData();
   }, []);
-
-  const fetchHomeData = async () => {
-    try {
-      const [featuredRes, trendingRes, categoriesRes] = await Promise.all([
-        bookAPI.getFeaturedBooks(),
-        bookAPI.getTrendingBooks(),
-        bookAPI.getCategories(),
-      ]);
-
-      setFeatured(featuredRes.data.books);
-      setTrending(trendingRes.data.books);
-      setCategories(categoriesRes.data.categories);
-    } catch (error) {
-      console.error('Error fetching home data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAddToCart = async (bookId) => {
     try {
@@ -58,30 +58,82 @@ const HomePage = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className={`min-h-screen transition ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+        <div className="container-custom py-24 text-center">
+          <p className={isDark ? 'text-white' : 'text-gray-900'}>Loading home content...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`min-h-screen transition ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+    <div className={`min-h-screen transition ${isDark ? 'bg-slate-950' : 'bg-slate-50'}`}>
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div className="container-custom">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Welcome to BookStore Platform
+      <section className="relative overflow-hidden py-24 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.45),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.35),_transparent_30%)]" />
+        <div className="relative container-custom grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-white shadow-lg shadow-indigo-900/20 backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 block" />
+              New launch — explore trending books
+            </div>
+            <h1 className="mt-8 text-5xl md:text-6xl font-black leading-tight">
+              Discover your next favorite book in minutes
             </h1>
-            <p className="text-xl mb-8 text-indigo-100">
-              Discover millions of books, read instantly, and track your reading progress
+            <p className="mt-6 text-lg leading-8 text-slate-100/90">
+              Explore curated collections, browse categories, and unlock bestselling titles with personalized recommendations.
             </p>
-            <div className="flex gap-4 justify-center">
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <button
                 onClick={() => navigate('/books')}
-                className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-lg hover:bg-gray-100 transition flex items-center gap-2"
+                className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-slate-900/10 hover:bg-slate-100 transition"
               >
-                Browse Books <FiArrowRight />
+                Browse Books <FiArrowRight className="ml-2" />
               </button>
               <button
-                onClick={() => navigate('/trending')}
-                className="px-8 py-3 bg-indigo-800 text-white font-bold rounded-lg hover:bg-indigo-900 transition"
+                onClick={() => navigate('/books?trending=true')}
+                className="inline-flex items-center justify-center rounded-full bg-white/10 border border-white/20 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition"
               >
-                See Trending
+                Trending Now
+              </button>
+            </div>
+
+            <div className="mt-12 grid grid-cols-3 gap-4">
+              {trending.slice(0, 3).map((book) => (
+                <div key={book._id} className="rounded-3xl bg-white/10 p-4 backdrop-blur-sm border border-white/10">
+                  <p className="text-sm text-indigo-100 font-semibold">{book.category}</p>
+                  <h3 className="mt-2 text-sm font-bold text-white leading-snug">{book.title}</h3>
+                  <p className="mt-2 text-xs text-slate-200">by {book.author}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-[2rem] bg-white/10 p-8 shadow-2xl shadow-indigo-900/20 backdrop-blur-xl border border-white/10">
+              <div className="grid gap-6 sm:grid-cols-2">
+                {featured.slice(0, 4).map((book) => (
+                  <div key={book._id} className="group overflow-hidden rounded-3xl bg-slate-950/80 shadow-inner shadow-slate-900/20 transition hover:-translate-y-1">
+                    <img
+                      src={book.coverImage}
+                      alt={book.title}
+                      className="h-44 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+                    <div className="p-4">
+                      <p className="text-sm font-semibold text-indigo-300">{book.category}</p>
+                      <h3 className="mt-2 text-base font-bold text-white">{book.title}</h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => navigate('/books?trending=true')}
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-white/10 border border-white/20 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition"
+              >
+                Trending Now
               </button>
             </div>
           </div>

@@ -33,12 +33,12 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/categories" className="hover:text-white transition">
+                <a href="/books" className="hover:text-white transition">
                   Categories
                 </a>
               </li>
               <li>
-                <a href="/trending" className="hover:text-white transition">
+                <a href="/books?trending=true" className="hover:text-white transition">
                   Trending
                 </a>
               </li>
@@ -71,16 +71,16 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-4">Follow Us</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition">
                 <FiFacebook size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition">
                 <FiTwitter size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition">
                 <FiInstagram size={20} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition">
                 <FiLinkedin size={20} />
               </a>
             </div>

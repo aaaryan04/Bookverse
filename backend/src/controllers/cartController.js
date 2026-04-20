@@ -102,7 +102,8 @@ exports.removeFromCart = async (req, res, next) => {
  */
 exports.updateCartItem = async (req, res, next) => {
   try {
-    const { bookId, quantity } = req.body;
+    const bookId = req.params.bookId;
+    const { quantity } = req.body;
 
     if (quantity < 1) {
       return res.status(400).json({

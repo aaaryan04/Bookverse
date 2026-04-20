@@ -5,9 +5,10 @@
 :root {
   --primary-color: #6366f1;
   --secondary-color: #8b5cf6;
-  --dark-bg: #0f172a;
+  --accent-color: #7c3aed;
+  --dark-bg: #020617;
   --light-bg: #f8fafc;
-  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
 }
 
 * {
@@ -24,12 +25,15 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8fafc;
   color: #0f172a;
+  min-height: 100vh;
   transition: all 0.3s ease;
+  background-image: radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 32%), radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 24%);
 }
 
 body.dark {
-  background-color: #0f172a;
+  background-color: #020617;
   color: #f8fafc;
+  background-image: radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 32%), radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.15), transparent 24%);
 }
 
 /* Utility Classes */
@@ -71,11 +75,21 @@ body.dark {
   @apply inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium;
 }
 
-/* Animations */
+.glass-card {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.glass-card.dark {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -84,10 +98,17 @@ body.dark {
 }
 
 .animate-slide-in {
-  animation: slideIn 0.3s ease;
+  animation: slideIn 0.35s ease;
 }
 
-/* Responsive */
+.hero-blur {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  filter: blur(80px);
+  opacity: 0.45;
+}
+
 @media (max-width: 768px) {
   .container-custom {
     padding: 0 16px;

@@ -1,19 +1,24 @@
 import axios from "axios";
 
+const DEFAULT_DEV_API_URL = "http://localhost:5000/api";
+const DEFAULT_PROD_API_URL = "https://bookverse-q7on.onrender.com/api";
+
 const API_URL =
   process.env.REACT_APP_API_URL ||
-  "https://bookverse-q7on.onrender.com/api";
-
-if (!API_URL) {
-  throw new Error("REACT_APP_API_URL is not defined.");
-}
+  (process.env.NODE_ENV === "development" ? DEFAULT_DEV_API_URL : DEFAULT_PROD_API_URL);
 
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
+
+if (!API_URL) {
+  throw new Error("API base URL could not be resolved.");
+}
+
 
 // ✅ Attach token automatically
 apiClient.interceptors.request.use((config) => {
@@ -40,8 +45,8 @@ export const bookAPI = {
   getBook: (id) => apiClient.get(`/books/${id}`),
   searchBooks: (query, filters) =>
     apiClient.get("/books/search", { params: { q: query, ...filters } }),
-  getFeaturedBooks: () => apiClient.get("/books/featured"),
-  getTrendingBooks: () => apiClient.get("/books/trending"),
+  getFeaturedBooks: (params) => apiClient.get("/books/featured", { params }),
+  getTrendingBooks: (params) => apiClient.get("/books/trending", { params }),
   getRelatedBooks: (id) => apiClient.get(`/books/${id}/related`),
   getCategories: () => apiClient.get("/books/categories"),
 };

@@ -2,12 +2,12 @@ const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const cartRoutes = require('../../src/routes/cartRoutes');
-const authRoutes = require('../../src/routes/authRoutes');
-const Cart = require('../../src/models/Cart');
-const Book = require('../../src/models/Book');
-const User = require('../../src/models/User');
-const errorHandler = require('../../src/middleware/errorHandler');
+const cartRoutes = require('../src/routes/cartRoutes');
+const authRoutes = require('../src/routes/authRoutes');
+const Cart = require('../src/models/Cart');
+const Book = require('../src/models/Book');
+const User = require('../src/models/User');
+const errorHandler = require('../src/middleware/errorHandler');
 
 let mongoServer;
 

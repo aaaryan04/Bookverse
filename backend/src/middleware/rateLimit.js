@@ -13,6 +13,7 @@ const authLimiter = rateLimit({
   max: 5, // 5 requests per windowMs
   message: 'Too many login attempts, please try again later.',
   skipSuccessfulRequests: true,
+  skip: () => process.env.NODE_ENV === 'test',
 });
 
 module.exports = { limiter, authLimiter };

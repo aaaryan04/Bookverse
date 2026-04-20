@@ -16,6 +16,10 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 
 const app = express();
 
+// Parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Connect to database
 connectDB();
 

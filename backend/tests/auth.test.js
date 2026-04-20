@@ -2,9 +2,9 @@ const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const authRoutes = require('../../src/routes/authRoutes');
-const User = require('../../src/models/User');
-const errorHandler = require('../../src/middleware/errorHandler');
+const authRoutes = require('../src/routes/authRoutes');
+const User = require('../src/models/User');
+const errorHandler = require('../src/middleware/errorHandler');
 
 let mongoServer;
 
@@ -21,15 +21,15 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-// Create test app
-const app = express();
-app.use(express.json());
-app.use('/api/auth', authRoutes);
-app.use(errorHandler);
+let app;
 
 describe('Auth API Tests', () => {
   beforeEach(async () => {
     await User.deleteMany({});
+    app = express();
+    app.use(express.json());
+    app.use('/api/auth', authRoutes);
+    app.use(errorHandler);
   });
 
   describe('POST /api/auth/register', () => {

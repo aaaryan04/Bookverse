@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --coverage",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --coverage --runInBand",
     "test:watch": "jest --watch",
     "seed": "node src/scripts/seedDatabase.js"
   },

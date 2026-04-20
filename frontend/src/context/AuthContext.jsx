@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
 const AuthContext = createContext();
@@ -9,24 +9,24 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await authAPI.getProfile();
+        setUser(response.data.user);
+      } catch (error) {
+        console.error('Profile fetch error:', error);
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (token) {
       fetchProfile();
     } else {
       setLoading(false);
     }
   }, [token]);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await authAPI.getProfile();
-      setUser(response.data.user);
-    } catch (error) {
-      console.error('Profile fetch error:', error);
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async (email, password) => {
     try {
