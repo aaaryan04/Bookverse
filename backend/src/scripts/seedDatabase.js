@@ -2,6 +2,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('../config/database');
 const Book = require('../models/Book');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 const baseSeedBooks = [
   {
@@ -291,6 +293,22 @@ const seedDatabase = async () => {
     // Insert seed books
     const result = await Book.insertMany(seedBooks);
     console.log(`✅ Seeded ${result.length} books`);
+
+    // Seed admin user
+    const adminExists = await User.findOne({ email: 'admin@bookstore.com' });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      await User.create({
+        email: 'admin@bookstore.com',
+        password: hashedPassword,
+        firstName: 'Admin',
+        lastName: 'User',
+        role: 'admin',
+      });
+      console.log('✅ Seeded admin user: admin@bookstore.com / admin123');
+    } else {
+      console.log('Admin user already exists');
+    }
 
     process.exit(0);
   } catch (error) {

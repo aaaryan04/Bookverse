@@ -112,5 +112,17 @@ export const wishlistAPI = {
     apiClient.get(`/wishlist/${bookId}`),
 };
 
+// ================= ADMIN APIs =================
+export const adminAPI = {
+  getDashboardStats: () => apiClient.get("/admin/dashboard"),
+  getAllOrders: (params) => apiClient.get("/admin/orders", { params }),
+  getOrderById: (id) => apiClient.get(`/admin/orders/${id}`),
+  updateOrderStatus: (id, data) =>
+    apiClient.put(`/admin/orders/${id}`, data),
+  getAllBooks: (params) => apiClient.get("/admin/books", { params }),
+  createBook: (data) => apiClient.post("/books", data),
+  updateBook: (id, data) => apiClient.put(`/books/${id}`, data),
+  deleteBook: (id) => apiClient.delete(`/books/${id}`),
+};
 
 export default apiClient;

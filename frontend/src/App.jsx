@@ -13,6 +13,9 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CartPage from './pages/CartPage';
 import BooksPage from './pages/BooksPage';
+import AdminDashboard from './pages/AdminDashboard';
+import ManageBooks from './pages/ManageBooks';
+import ManageOrders from './pages/ManageOrders';
 
 import './styles/index.css';
 
@@ -30,6 +33,9 @@ const AppContent = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/books" element={<ManageBooks />} />
+            <Route path="/admin/orders" element={<ManageOrders />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
