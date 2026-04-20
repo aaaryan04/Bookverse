@@ -149,97 +149,116 @@ exports.getRelatedBooks = async (req, res, next) => {
 };
 
 /**
- * Create a new book (admin only)
- */
-exports.createBook = async (req, res, next) => {
-  try {
-    const book = new Book(req.validatedData);
-    await book.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Book created successfully',
-      book,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Update book (admin only)
- */
-exports.updateBook = async (req, res, next) => {
-  try {
-    const book = await Book.findByIdAndUpdate(req.params.id, req.validatedData, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!book) {
-      return res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
-    }
-
-    res.json({
-      success: true,
-      message: 'Book updated successfully',
-      book,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Delete book (admin only)
- */
-exports.deleteBook = async (req, res, next) => {
-  try {
-    const book = await Book.findByIdAndDelete(req.params.id);
-
-    if (!book) {
-      return res.status(404).json({
-        success: false,
-        message: 'Book not found',
-      });
-    }
-
-    res.json({
-      success: true,
-      message: 'Book deleted successfully',
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
  * Get categories
  */
 exports.getCategories = async (req, res, next) => {
   try {
-    const categories = [
-      'Programming',
-      'Business',
-      'Self-Development',
-      'Fiction',
-      'Cybersecurity',
-      'Psychology',
-    ];
-
-    const categoriesWithCount = await Promise.all(
-      categories.map(async (category) => ({
-        category,
-        count: await Book.countDocuments({ category }),
-      }))
-    );
+    const categories = await Book.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1, _id: 1 } },
+    ]);
 
     res.json({
       success: true,
-      categories: categoriesWithCount,
+      categories: categories.map(({ _id, count }) => ({ category: _id, count })),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get top rated books
+ */
+exports.getTopRatedBooks = async (req, res, next) => {
+  try {
+    const { limit = 10 } = req.query;
+    const books = await Book.find({ rating: { $gte: 3 } })
+      .sort({ rating: -1, reviewCount: -1 })
+      .limit(parseInt(limit));
+
+    res.json({
+      success: true,
+      books,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get new arrivals
+ */
+exports.getNewArrivals = async (req, res, next) => {
+  try {
+    const { limit = 10 } = req.query;
+    const books = await Book.find()
+      .sort({ publicationDate: -1, createdAt: -1 })
+      .limit(parseInt(limit));
+
+    res.json({
+      success: true,
+      books,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get discounted books
+ */
+exports.getDiscountedBooks = async (req, res, next) => {
+  try {
+    const { limit = 10 } = req.query;
+    const books = await Book.find({ discountedPrice: { $exists: true, $ne: null } })
+      .sort({ discountedPrice: 1, rating: -1 })
+      .limit(parseInt(limit));
+
+    res.json({
+      success: true,
+      books,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get book catalog stats
+ */
+exports.getBookStats = async (req, res, next) => {
+  try {
+    const totalBooks = await Book.countDocuments();
+    const categories = await Book.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 },
+          avgRating: { $avg: '$rating' },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+    const topCategories = categories.slice(0, 5);
+    const newestBooks = await Book.find()
+      .sort({ publicationDate: -1 })
+      .limit(5)
+      .select('title author publicationDate');
+
+    res.json({
+      success: true,
+      stats: {
+        totalBooks,
+        totalCategories: categories.length,
+        topCategories,
+        newestBooks,
+      },
     });
   } catch (error) {
     next(error);

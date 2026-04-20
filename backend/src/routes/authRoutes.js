@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const { validateRequest, userRegisterSchema, userLoginSchema } = require('../middleware/validation');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/rateLimit');
 
 /**
@@ -32,12 +32,5 @@ router.get('/profile', authMiddleware, authController.getProfile);
  * @access  Private
  */
 router.put('/profile', authMiddleware, authController.updateProfile);
-
-/**
- * @route   GET /api/auth/users
- * @desc    Get all users (admin only)
- * @access  Private/Admin
- */
-router.get('/users', authMiddleware, adminMiddleware, authController.getAllUsers);
 
 module.exports = router;

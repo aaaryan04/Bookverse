@@ -126,12 +126,6 @@ Once deployed, replace `YOUR-NAME` with your choice:
 - ✅ PDF eBook reader
 - ✅ Personalized recommendations
 
-### Admin Features (if implemented)
-- ✅ Add/Edit/Delete books
-- ✅ Manage users
-- ✅ View all orders
-- ✅ Manage reviews
-
 ---
 
 ## 📊 Deployment Checklist

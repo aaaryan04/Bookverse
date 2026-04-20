@@ -47,6 +47,10 @@ export const bookAPI = {
     apiClient.get("/books/search", { params: { q: query, ...filters } }),
   getFeaturedBooks: (params) => apiClient.get("/books/featured", { params }),
   getTrendingBooks: (params) => apiClient.get("/books/trending", { params }),
+  getTopRatedBooks: (params) => apiClient.get("/books/top-rated", { params }),
+  getNewArrivals: (params) => apiClient.get("/books/new-arrivals", { params }),
+  getDiscountedBooks: (params) => apiClient.get("/books/discounts", { params }),
+  getBookStats: () => apiClient.get("/books/stats"),
   getRelatedBooks: (id) => apiClient.get(`/books/${id}/related`),
   getCategories: () => apiClient.get("/books/categories"),
 };
@@ -110,19 +114,6 @@ export const wishlistAPI = {
     apiClient.delete(`/wishlist/${bookId}`),
   isInWishlist: (bookId) =>
     apiClient.get(`/wishlist/${bookId}`),
-};
-
-// ================= ADMIN APIs =================
-export const adminAPI = {
-  getDashboardStats: () => apiClient.get("/admin/dashboard"),
-  getAllOrders: (params) => apiClient.get("/admin/orders", { params }),
-  getOrderById: (id) => apiClient.get(`/admin/orders/${id}`),
-  updateOrderStatus: (id, data) =>
-    apiClient.put(`/admin/orders/${id}`, data),
-  getAllBooks: (params) => apiClient.get("/admin/books", { params }),
-  createBook: (data) => apiClient.post("/books", data),
-  updateBook: (id, data) => apiClient.put(`/books/${id}`, data),
-  deleteBook: (id) => apiClient.delete(`/books/${id}`),
 };
 
 export default apiClient;

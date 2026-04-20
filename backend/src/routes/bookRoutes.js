@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
 const { validateRequest, bookSchema } = require('../middleware/validation');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 
 /**
  * @route   GET /api/books
@@ -40,6 +40,34 @@ router.get('/search', bookController.searchBooks);
 router.get('/categories', bookController.getCategories);
 
 /**
+ * @route   GET /api/books/top-rated
+ * @desc    Get top rated books
+ * @access  Public
+ */
+router.get('/top-rated', bookController.getTopRatedBooks);
+
+/**
+ * @route   GET /api/books/new-arrivals
+ * @desc    Get newest books by publication date
+ * @access  Public
+ */
+router.get('/new-arrivals', bookController.getNewArrivals);
+
+/**
+ * @route   GET /api/books/discounts
+ * @desc    Get discounted books
+ * @access  Public
+ */
+router.get('/discounts', bookController.getDiscountedBooks);
+
+/**
+ * @route   GET /api/books/stats
+ * @desc    Get book catalog statistics
+ * @access  Public
+ */
+router.get('/stats', bookController.getBookStats);
+
+/**
  * @route   GET /api/books/:id
  * @desc    Get book by ID
  * @access  Public
@@ -52,26 +80,5 @@ router.get('/:id', bookController.getBook);
  * @access  Public
  */
 router.get('/:id/related', bookController.getRelatedBooks);
-
-/**
- * @route   POST /api/books
- * @desc    Create a new book (admin only)
- * @access  Private/Admin
- */
-router.post('/', authMiddleware, adminMiddleware, validateRequest(bookSchema), bookController.createBook);
-
-/**
- * @route   PUT /api/books/:id
- * @desc    Update book (admin only)
- * @access  Private/Admin
- */
-router.put('/:id', authMiddleware, adminMiddleware, validateRequest(bookSchema), bookController.updateBook);
-
-/**
- * @route   DELETE /api/books/:id
- * @desc    Delete book (admin only)
- * @access  Private/Admin
- */
-router.delete('/:id', authMiddleware, adminMiddleware, bookController.deleteBook);
 
 module.exports = router;

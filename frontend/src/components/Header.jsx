@@ -107,20 +107,6 @@ const Header = () => {
             {isAuthenticated ? (
               <div className="hidden md:flex items-center gap-4">
                 <span className="text-sm font-medium">{user?.firstName}</span>
-                {user?.role === 'admin' && (
-                  <button
-                    onClick={() => navigate('/admin')}
-                    className="px-3 py-1 text-xs font-semibold bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-                  >
-                    Admin
-                  </button>
-                )}
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-lg transition"
-                >
-                  <FiUser size={20} />
-                </button>
                 <button
                   onClick={handleLogout}
                   className="p-2 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-lg transition"

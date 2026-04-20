@@ -13,7 +13,6 @@ const orderRoutes = require('./routes/orderRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const readingProgressRoutes = require('./routes/readingProgressRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
-const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -56,7 +55,6 @@ app.use('/api/orders', orderRoutes);
 app.use('/api', reviewRoutes);
 app.use('/api/reading', readingProgressRoutes);
 app.use('/api/wishlist', wishlistRoutes);
-app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use((req, res) => {

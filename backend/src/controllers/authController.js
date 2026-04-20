@@ -27,7 +27,7 @@ exports.register = async (req, res, next) => {
 
     await user.save();
 
-    const token = generateToken(user._id, user.role);
+    const token = generateToken(user._id);
 
     res.status(201).json({
       success: true,
@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    const token = generateToken(user._id, user.role);
+    const token = generateToken(user._id);
 
     res.json({
       success: true,
@@ -122,37 +122,6 @@ exports.updateProfile = async (req, res, next) => {
       success: true,
       message: 'Profile updated successfully',
       user: user.toJSON(),
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Get all users (admin only)
- */
-exports.getAllUsers = async (req, res, next) => {
-  try {
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
-
-    const users = await User.find()
-      .select('-password')
-      .skip(skip)
-      .limit(parseInt(limit))
-      .sort({ createdAt: -1 });
-
-    const total = await User.countDocuments();
-
-    res.json({
-      success: true,
-      users,
-      pagination: {
-        total,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        pages: Math.ceil(total / limit),
-      },
     });
   } catch (error) {
     next(error);

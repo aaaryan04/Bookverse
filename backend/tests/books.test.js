@@ -165,4 +165,41 @@ describe('Book API Tests', () => {
       expect(res.body.success).toBe(false);
     });
   });
+
+  describe('new book endpoints', () => {
+    it('should return top rated books', async () => {
+      const res = await request(app).get('/api/books/top-rated');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.books.length).toBeGreaterThan(0);
+      expect(res.body.books[0].rating).toBeGreaterThanOrEqual(3);
+    });
+
+    it('should return new arrivals', async () => {
+      const res = await request(app).get('/api/books/new-arrivals');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.books.length).toBeGreaterThan(0);
+    });
+
+    it('should return discounted books', async () => {
+      const res = await request(app).get('/api/books/discounts');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.books.length).toBeGreaterThan(0);
+      expect(res.body.books[0]).toHaveProperty('discountedPrice');
+    });
+
+    it('should return book stats', async () => {
+      const res = await request(app).get('/api/books/stats');
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.stats).toHaveProperty('totalBooks');
+      expect(res.body.stats.totalBooks).toBe(2);
+    });
+  });
 });

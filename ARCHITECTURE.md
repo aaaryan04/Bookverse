@@ -166,7 +166,7 @@ Security Layers:
 ├─ JWT Tokens (stateless auth)
 ├─ CORS (cross-origin control)
 ├─ Error Handling (no sensitive data leaks)
-└─ Role-Based Access Control (user vs admin)
+└─ Authentication and authorization
 ```
 
 ## 🗄️ Database Schema Relationships

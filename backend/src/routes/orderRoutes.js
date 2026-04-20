@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 
 /**
  * @route   POST /api/orders
@@ -23,19 +23,5 @@ router.get('/', authMiddleware, orderController.getUserOrders);
  * @access  Private
  */
 router.get('/:id', authMiddleware, orderController.getOrder);
-
-/**
- * @route   PUT /api/orders/:id
- * @desc    Update order status (admin only)
- * @access  Private/Admin
- */
-router.put('/:id', authMiddleware, adminMiddleware, orderController.updateOrderStatus);
-
-/**
- * @route   GET /api/orders/admin/all
- * @desc    Get all orders (admin only)
- * @access  Private/Admin
- */
-router.get('/admin/all', authMiddleware, adminMiddleware, orderController.getAllOrders);
 
 module.exports = router;

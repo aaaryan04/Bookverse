@@ -89,6 +89,10 @@ GET    /api/books/:id          - Get book details
 GET    /api/books/search       - Search books
 GET    /api/books/featured     - Featured books
 GET    /api/books/trending     - Trending books
+GET    /api/books/top-rated    - Top rated books
+GET    /api/books/new-arrivals - New arrivals
+GET    /api/books/discounts    - Discounted books
+GET    /api/books/stats        - Book catalog statistics
 GET    /api/books/categories   - Get categories
 ```
 
@@ -248,7 +252,7 @@ src/
 3. **Store Token**: Save JWT in localStorage
 4. **Make Requests**: Include `Authorization: Bearer <token>` header
 5. **Verify Token**: Backend middleware validates token
-6. **Authorize**: Check user role for admin routes
+6. **Authorize**: Check access for protected routes
 
 ---
 
