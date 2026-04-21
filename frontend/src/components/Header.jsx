@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { FiSearch, FiShoppingCart, FiUser, FiLogOut, FiMenu, FiX, FiMoon, FiSun } from 'react-icons/fi';
+import { FiSearch, FiShoppingCart, FiLogOut, FiMenu, FiX, FiMoon, FiSun } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 const Header = () => {
