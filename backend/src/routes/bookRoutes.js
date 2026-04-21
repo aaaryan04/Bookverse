@@ -68,17 +68,17 @@ router.get('/discounts', bookController.getDiscountedBooks);
 router.get('/stats', bookController.getBookStats);
 
 /**
- * @route   GET /api/books/:id
- * @desc    Get book by ID
- * @access  Public
- */
-router.get('/:id', bookController.getBook);
-
-/**
  * @route   GET /api/books/:id/related
  * @desc    Get related books
  * @access  Public
  */
 router.get('/:id/related', bookController.getRelatedBooks);
+
+/**
+ * @route   GET /api/books/:id
+ * @desc    Get book by ID
+ * @access  Public
+ */
+router.get('/:id', bookController.getBook);
 
 module.exports = router;

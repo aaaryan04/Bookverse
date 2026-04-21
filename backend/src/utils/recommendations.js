@@ -87,32 +87,63 @@ const getRelatedBooks = async (bookId, limit = 5) => {
 };
 
 /**
- * Search books with full-text search
+ * Search books with full-text search and filters
+ * Supports searching by title, author, description, and tags
  */
 const searchBooks = async (query, filters = {}) => {
   try {
+    if (!query || query.trim() === '') {
+      return [];
+    }
+
+    // Escape special regex characters in query
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regexPattern = new RegExp(escapedQuery, 'i');
+
+    // Build search query with OR conditions for multiple fields
     const searchQuery = {
-      $text: { $search: query },
+      $or: [
+        { title: regexPattern },
+        { author: regexPattern },
+        { description: regexPattern },
+        { tags: { $regex: escapedQuery, $options: 'i' } },
+      ],
     };
 
-    if (filters.category) {
+    // Add category filter if provided
+    if (filters.category && filters.category !== 'all') {
       searchQuery.category = filters.category;
     }
 
+    // Add price filter if both min and max are provided
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
-      searchQuery.price = {
-        $gte: filters.minPrice,
-        $lte: filters.maxPrice,
-      };
+      const minPrice = parseFloat(filters.minPrice);
+      const maxPrice = parseFloat(filters.maxPrice);
+      
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        searchQuery.price = {
+          $gte: minPrice,
+          $lte: maxPrice,
+        };
+      }
     }
 
+    // Add rating filter if provided
     if (filters.minRating !== undefined) {
-      searchQuery.rating = { $gte: filters.minRating };
+      const minRating = parseFloat(filters.minRating);
+      if (!isNaN(minRating) && minRating > 0) {
+        searchQuery.rating = { $gte: minRating };
+      }
     }
+
+    // Execute search query with sorting and pagination
+    const limit = parseInt(filters.limit) || 50;
+    const skip = (parseInt(filters.page) || 0) * limit;
 
     const results = await Book.find(searchQuery)
-      .sort({ score: { $meta: 'textScore' } })
-      .limit(50);
+      .sort({ rating: -1, reviewCount: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     return results;
   } catch (error) {

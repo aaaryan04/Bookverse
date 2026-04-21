@@ -69,30 +69,80 @@ exports.getBook = async (req, res, next) => {
  */
 exports.searchBooks = async (req, res, next) => {
   try {
-    const { q, category, minPrice, maxPrice, minRating } = req.query;
+    const { q, category, minPrice, maxPrice, minRating, page = 1, limit = 12 } = req.query;
 
-    if (!q) {
+    // Validate search query
+    if (!q || q.trim() === '') {
       return res.status(400).json({
         success: false,
         message: 'Search query is required',
       });
     }
 
+    // Build filters object
     const filters = {
-      category,
+      category: category || undefined,
       minPrice: minPrice ? parseFloat(minPrice) : undefined,
       maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
       minRating: minRating ? parseFloat(minRating) : undefined,
+      page: parseInt(page) - 1, // Convert to 0-indexed
+      limit: parseInt(limit),
     };
 
+    // Perform search
     const results = await searchBooks(q, filters);
+
+    // For now, get total count (optimizable in future)
+    const escapedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regexPattern = new RegExp(escapedQuery, 'i');
+    
+    const totalCountQuery = {
+      $or: [
+        { title: regexPattern },
+        { author: regexPattern },
+        { description: regexPattern },
+        { tags: { $regex: escapedQuery, $options: 'i' } },
+      ],
+    };
+
+    if (filters.category && filters.category !== 'all') {
+      totalCountQuery.category = filters.category;
+    }
+
+    if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
+      const minPrice = parseFloat(filters.minPrice);
+      const maxPrice = parseFloat(filters.maxPrice);
+      
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        totalCountQuery.price = {
+          $gte: minPrice,
+          $lte: maxPrice,
+        };
+      }
+    }
+
+    if (filters.minRating !== undefined) {
+      const minRating = parseFloat(filters.minRating);
+      if (!isNaN(minRating) && minRating > 0) {
+        totalCountQuery.rating = { $gte: minRating };
+      }
+    }
+
+    const totalCount = await Book.countDocuments(totalCountQuery);
 
     res.json({
       success: true,
       results,
+      pagination: {
+        total: totalCount,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        pages: Math.ceil(totalCount / parseInt(limit)),
+      },
       count: results.length,
     });
   } catch (error) {
+    console.error('Search controller error:', error);
     next(error);
   }
 };

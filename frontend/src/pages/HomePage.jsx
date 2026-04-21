@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { bookAPI, cartAPI, wishlistAPI } from '../services/api';
 import BookCard from '../components/BookCard';
 import { toast } from 'react-toastify';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiSearch } from 'react-icons/fi';
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { isDark } = useTheme();
+  const { user } = useAuth();
   const [featured, setFeatured] = useState([]);
   const [trending, setTrending] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/books?search=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -28,6 +39,8 @@ const HomePage = () => {
         setCategories(categoriesRes.data.categories);
       } catch (error) {
         console.error('Error fetching home data:', error);
+        const errorMsg = error.response?.data?.message || error.message || 'Failed to load home data. Please ensure the backend server is running on http://localhost:5000';
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
@@ -37,15 +50,27 @@ const HomePage = () => {
   }, []);
 
   const handleAddToCart = async (bookId) => {
+    if (!user) {
+      toast.warning('Please log in to add items to cart');
+      navigate('/login');
+      return;
+    }
     try {
       await cartAPI.addToCart({ bookId, quantity: 1 });
       toast.success('Added to cart!');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error adding to cart');
+      console.error('Cart error:', error);
+      const errorMsg = error.response?.data?.message || error.message || 'Error adding to cart';
+      toast.error(errorMsg);
     }
   };
 
   const handleAddToWishlist = async (bookId) => {
+    if (!user) {
+      toast.warning('Please log in to add items to wishlist');
+      navigate('/login');
+      return;
+    }
     try {
       await wishlistAPI.addToWishlist(bookId);
       toast.success('Added to wishlist!');
@@ -53,6 +78,7 @@ const HomePage = () => {
       if (error.response?.status === 400) {
         toast.info('Already in wishlist');
       } else {
+        console.error('Wishlist error:', error);
         toast.error('Error adding to wishlist');
       }
     }
@@ -63,6 +89,25 @@ const HomePage = () => {
       <div className={`min-h-screen transition ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
         <div className="container-custom py-24 text-center">
           <p className={isDark ? 'text-white' : 'text-gray-900'}>Loading home content...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`min-h-screen transition ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+        <div className="container-custom py-24 text-center">
+          <div className={`rounded-lg p-6 ${isDark ? 'bg-red-900/30 border border-red-700' : 'bg-red-50 border border-red-200'}`}>
+            <p className={`font-semibold ${isDark ? 'text-red-200' : 'text-red-800'}`}>Error Loading Content</p>
+            <p className={`text-sm mt-2 ${isDark ? 'text-red-300' : 'text-red-700'}`}>{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -100,6 +145,25 @@ const HomePage = () => {
                 Trending Now
               </button>
             </div>
+
+            {/* Search Bar */}
+            <form onSubmit={handleSearch} className="mt-8">
+              <div className="flex gap-2 bg-white/10 rounded-full p-2 border border-white/20 backdrop-blur-sm">
+                <input
+                  type="text"
+                  placeholder="Search by title, author, or keyword..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 bg-transparent text-white placeholder-white/50 outline-none px-6 py-2"
+                />
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-6 py-2 font-semibold flex items-center gap-2 transition"
+                >
+                  <FiSearch /> Search
+                </button>
+              </div>
+            </form>
 
             <div className="mt-12 grid grid-cols-3 gap-4">
               {trending.slice(0, 3).map((book) => (
