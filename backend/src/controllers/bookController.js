@@ -12,12 +12,15 @@ const {
  */
 exports.getAllBooks = async (req, res, next) => {
   try {
-    const { page = 1, limit = 12, category, sortBy = '-createdAt' } = req.query;
+    const { page = 1, limit = 12, category, sortBy = '-createdAt', isFree } = req.query;
     const skip = (page - 1) * limit;
 
     const query = {};
     if (category) {
       query.category = category;
+    }
+    if (isFree === 'true') {
+      query.isFree = true;
     }
 
     const books = await Book.find(query)

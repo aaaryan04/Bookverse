@@ -46,7 +46,23 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Search Bar - Hidden on mobile */}
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-6">
+            <button
+              onClick={() => navigate('/books')}
+              className="text-sm font-medium hover:text-indigo-600 transition"
+            >
+              Books
+            </button>
+            {isAuthenticated && (
+              <button
+                onClick={() => navigate('/my-learning')}
+                className="text-sm font-medium hover:text-indigo-600 transition"
+              >
+                My Learning
+              </button>
+            )}
+          </nav>
           <form
             onSubmit={handleSearch}
             className="hidden md:flex flex-1 max-w-md mx-8"
@@ -167,6 +183,34 @@ const Header = () => {
               </button>
             </div>
           </form>
+        )}
+
+        {/* Mobile Navigation */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-gray-200 dark:border-slate-700 pt-4 pb-2">
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  navigate('/books');
+                  setMenuOpen(false);
+                }}
+                className="text-left px-2 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition"
+              >
+                Books
+              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => {
+                    navigate('/my-learning');
+                    setMenuOpen(false);
+                  }}
+                  className="text-left px-2 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition"
+                >
+                  My Learning
+                </button>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </header>

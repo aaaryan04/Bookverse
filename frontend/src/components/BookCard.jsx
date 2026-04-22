@@ -1,14 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { FiStar, FiHeart } from 'react-icons/fi';
+import { FiStar, FiHeart, FiPlay, FiBookOpen } from 'react-icons/fi';
 
 import { useTheme } from '../context/ThemeContext';
+import { readingProgressAPI } from '../services/api';
+import ProgressBar from './ProgressBar';
 
 
 
-const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate }) => {
-
+const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate, showProgress = true }) => {
   const { isDark } = useTheme();
+  const [readingProgress, setReadingProgress] = useState(null);
+  const [isEnrolling, setIsEnrolling] = useState(false);
+
+  useEffect(() => {
+    if (showProgress && book.isFree) {
+      fetchReadingProgress();
+    }
+  }, [book._id, showProgress, book.isFree]);
+
+  const fetchReadingProgress = async () => {
+    try {
+      const response = await readingProgressAPI.getProgress(book._id);
+      setReadingProgress(response.data.progress);
+    } catch (error) {
+      // User hasn't enrolled yet, that's fine
+      setReadingProgress(null);
+    }
+  };
+
+  const handleEnroll = async () => {
+    setIsEnrolling(true);
+    try {
+      await readingProgressAPI.startReading(book._id);
+      await fetchReadingProgress();
+    } catch (error) {
+      console.error('Failed to enroll:', error);
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
+
+  const handleContinueReading = () => {
+    onNavigate(`/books/${book._id}/read`);
+  };
 
 
 
@@ -60,10 +95,12 @@ const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate }) => {
 
         </div>
 
-        <div className="absolute top-4 right-4 inline-flex items-center gap-2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-
-          ${book.discountedPrice || book.price}
-
+        <div className="absolute top-4 right-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm backdrop-blur-sm">
+          {book.isFree ? (
+            <span className="bg-green-600">FREE</span>
+          ) : (
+            <span className="bg-indigo-600">${book.discountedPrice || book.price}</span>
+          )}
         </div>
 
       </div>
@@ -110,40 +147,51 @@ const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate }) => {
 
 
 
+        {book.isFree && readingProgress && (
+          <div className="mb-4">
+            <ProgressBar progress={readingProgress.progressPercentage} size="small" />
+          </div>
+        )}
+
         <div className="flex items-center gap-3">
+          {book.isFree ? (
+            readingProgress ? (
+              <button
+                onClick={handleContinueReading}
+                className="flex-1 rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-green-500/10 hover:bg-green-700 transition flex items-center justify-center gap-2"
+              >
+                <FiBookOpen size={16} />
+                Continue Reading
+              </button>
+            ) : (
+              <button
+                onClick={handleEnroll}
+                disabled={isEnrolling}
+                className="flex-1 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-green-500/10 hover:from-green-600 hover:to-emerald-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <FiPlay size={16} />
+                {isEnrolling ? 'Enrolling...' : 'Enroll Now (Free)'}
+              </button>
+            )
+          ) : (
+            <button
+              onClick={() => onAddToCart(book._id)}
+              className="flex-1 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/10 hover:bg-indigo-700 transition"
+            >
+              Add to Cart
+            </button>
+          )}
 
           <button
-
-            onClick={() => onAddToCart(book._id)}
-
-            className="flex-1 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/10 hover:bg-indigo-700 transition"
-
-          >
-
-            Add to Cart
-
-          </button>
-
-          <button
-
             onClick={() => onAddToWishlist(book._id)}
-
             className={`rounded-2xl p-3 transition ${
-
               isDark
-
                 ? 'bg-slate-800 text-white hover:bg-slate-700'
-
                 : 'bg-gray-100 text-slate-900 hover:bg-gray-200'
-
             }`}
-
           >
-
             <FiHeart size={20} />
-
           </button>
-
         </div>
 
       </div>

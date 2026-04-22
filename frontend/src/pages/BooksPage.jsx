@@ -29,11 +29,14 @@ const BooksPage = () => {
   const category = searchParams.get('category');
   const trending = searchParams.get('trending') === 'true';
   const featured = searchParams.get('featured') === 'true';
+  const isFree = searchParams.get('isFree') === 'true';
 
   const pageTitle = trending
     ? 'Trending Books'
     : featured
     ? 'Featured Books'
+    : isFree
+    ? 'Free Learning Books'
     : category
     ? `${category} Books`
     : searchQuery
@@ -71,6 +74,7 @@ const BooksPage = () => {
           page,
           limit: 12,
           sortBy,
+          isFree: isFree || undefined,
         });
         setBooks(booksResponse.data.books || []);
         setTotalPages(booksResponse.data.pagination?.pages || 1);
@@ -89,7 +93,7 @@ const BooksPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearchQuery, category, trending, featured, page, priceRange, minRating, sortBy]);
+  }, [debouncedSearchQuery, category, trending, featured, page, priceRange, minRating, sortBy, isFree]);
 
   // Debounced search handler
   const handleSearchChange = (e) => {
@@ -331,6 +335,39 @@ const BooksPage = () => {
             </div>
           )}
         </div>
+
+        {/* Free Books Section */}
+        {!searchQuery && !category && !trending && !featured && (
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-2">Free Learning Books</h2>
+                <p className="text-slate-400">Start your learning journey with our collection of free educational books</p>
+              </div>
+              <button
+                onClick={() => {
+                  setSearchParams({ isFree: 'true' });
+                  setPage(1);
+                }}
+                className="text-indigo-400 hover:text-indigo-300 transition"
+              >
+                View All Free Books →
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {books.filter(book => book.isFree).slice(0, 4).map((book) => (
+                <BookCard
+                  key={book._id}
+                  book={book}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                  onNavigate={navigate}
+                  showProgress={true}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Books Grid */}
         {loading ? (

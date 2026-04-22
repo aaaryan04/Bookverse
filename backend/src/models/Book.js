@@ -88,6 +88,11 @@ const bookSchema = new mongoose.Schema(
       default: false,
       index: true,
     },
+    isFree: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     tags: [String],
     createdAt: {
       type: Date,
