@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { FiStar, FiHeart, FiPlay, FiBookOpen } from 'react-icons/fi';
 
@@ -13,13 +13,7 @@ const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate, showProgress
   const [readingProgress, setReadingProgress] = useState(null);
   const [isEnrolling, setIsEnrolling] = useState(false);
 
-  useEffect(() => {
-    if (showProgress && book.isFree) {
-      fetchReadingProgress();
-    }
-  }, [book._id, showProgress, book.isFree]);
-
-  const fetchReadingProgress = async () => {
+  const fetchReadingProgress = useCallback(async () => {
     try {
       const response = await readingProgressAPI.getProgress(book._id);
       setReadingProgress(response.data.progress);
@@ -27,7 +21,13 @@ const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate, showProgress
       // User hasn't enrolled yet, that's fine
       setReadingProgress(null);
     }
-  };
+  }, [book._id]);
+
+  useEffect(() => {
+    if (showProgress && book.isFree) {
+      fetchReadingProgress();
+    }
+  }, [book._id, showProgress, book.isFree, fetchReadingProgress]);
 
   const handleEnroll = async () => {
     setIsEnrolling(true);

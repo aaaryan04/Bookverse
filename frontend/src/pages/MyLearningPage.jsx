@@ -6,7 +6,6 @@ import { FiBookOpen, FiTrendingUp, FiClock, FiCheckCircle } from 'react-icons/fi
 import { useTheme } from '../context/ThemeContext';
 import { readingProgressAPI } from '../services/api';
 import ProgressBar from '../components/ProgressBar';
-import BookCard from '../components/BookCard';
 
 const MyLearningPage = () => {
   const { isDark } = useTheme();
@@ -51,17 +50,7 @@ const MyLearningPage = () => {
     }
   };
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
 
-  const handleAddToCart = (bookId) => {
-    // Not applicable for learning page
-  };
-
-  const handleAddToWishlist = (bookId) => {
-    // Not applicable for learning page
-  };
 
   if (loading) {
     return (
