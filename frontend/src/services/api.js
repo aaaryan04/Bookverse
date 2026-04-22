@@ -97,6 +97,8 @@ export const readingProgressAPI = {
     apiClient.get("/reading", { params }),
   startReading: (bookId) =>
     apiClient.post(`/reading/${bookId}/start`),
+  enrollInBook: (bookId) =>
+    apiClient.post(`/reading/enroll/${bookId}`),
   updateProgress: (bookId, data) =>
     apiClient.put(`/reading/${bookId}`, data),
   addBookmark: (bookId, data) =>

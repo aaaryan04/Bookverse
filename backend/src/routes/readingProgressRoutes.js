@@ -25,6 +25,13 @@ router.get('/', authMiddleware, readingProgressController.getUserReadingProgress
 router.post('/:bookId/start', authMiddleware, readingProgressController.startReading);
 
 /**
+ * @route   POST /api/reading/enroll/:bookId
+ * @desc    Enroll in a free book
+ * @access  Private
+ */
+router.post('/enroll/:bookId', authMiddleware, readingProgressController.enrollInBook);
+
+/**
  * @route   PUT /api/reading/:bookId
  * @desc    Update reading progress
  * @access  Private

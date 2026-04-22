@@ -267,3 +267,62 @@ exports.addNote = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Enroll in a free book
+ */
+exports.enrollInBook = async (req, res, next) => {
+  try {
+    const { bookId } = req.params;
+
+    const book = await Book.findById(bookId);
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: 'Book not found',
+      });
+    }
+
+    if (!book.isFree) {
+      return res.status(400).json({
+        success: false,
+        message: 'This book is not available for free enrollment',
+      });
+    }
+
+    // Check if already enrolled
+    let progress = await ReadingProgress.findOne({
+      user: req.user.userId,
+      book: bookId,
+    }).populate('book');
+
+    if (progress) {
+      return res.json({
+        success: true,
+        message: 'Already enrolled in this book',
+        progress,
+      });
+    }
+
+    // Create new enrollment
+    progress = new ReadingProgress({
+      user: req.user.userId,
+      book: bookId,
+      totalPages: book.pages,
+      currentPage: 0,
+      progressPercentage: 0,
+      status: 'reading',
+    });
+
+    await progress.save();
+    await progress.populate('book');
+
+    res.status(201).json({
+      success: true,
+      message: 'Successfully enrolled in book',
+      progress,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
