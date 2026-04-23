@@ -136,6 +136,11 @@ const searchBooks = async (query, filters = {}) => {
       }
     }
 
+    // Add free-book filter if requested
+    if (filters.isFree === 'true') {
+      searchQuery.isFree = true;
+    }
+
     // Execute search query with sorting and pagination
     const limit = parseInt(filters.limit) || 50;
     const skip = (parseInt(filters.page) || 0) * limit;

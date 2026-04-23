@@ -2,11 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { FiStar, FiHeart, FiBook } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { readingProgressAPI } from '../services/api';
 import ProgressBar from './ProgressBar';
 
 const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate }) => {
   const { isDark } = useTheme();
+  const { user } = useAuth();
   const [readingProgress, setReadingProgress] = useState(null);
   const [isEnrolling, setIsEnrolling] = useState(false);
 
@@ -21,13 +23,21 @@ const BookCard = ({ book, onAddToCart, onAddToWishlist, onNavigate }) => {
   }, [book._id]);
 
   useEffect(() => {
-    if (book.isFree) {
+    if (book.isFree && user) {
       fetchReadingProgress();
+    } else {
+      setReadingProgress(null);
     }
-  }, [book._id, book.isFree, fetchReadingProgress]);
+  }, [book._id, book.isFree, user, fetchReadingProgress]);
 
   const handleReadClick = async () => {
     if (book.isFree) {
+      if (!user) {
+        toast.warning('Please log in to enroll in this free book');
+        onNavigate('/login');
+        return;
+      }
+
       // Enroll in free book
       setIsEnrolling(true);
       try {

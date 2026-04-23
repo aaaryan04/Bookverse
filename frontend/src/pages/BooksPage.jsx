@@ -57,9 +57,10 @@ const BooksPage = () => {
           minPrice: priceRange[0],
           maxPrice: priceRange[1],
           minRating,
+          isFree: isFree || undefined,
         });
         setBooks(booksResponse.data.results || []);
-        setTotalPages(1);
+        setTotalPages(booksResponse.data.pagination?.pages || 1);
       } else if (trending) {
         booksResponse = await bookAPI.getTrendingBooks({ limit: 50 });
         setBooks(booksResponse.data.books || []);

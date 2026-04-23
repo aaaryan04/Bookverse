@@ -72,7 +72,7 @@ exports.getBook = async (req, res, next) => {
  */
 exports.searchBooks = async (req, res, next) => {
   try {
-    const { q, category, minPrice, maxPrice, minRating, page = 1, limit = 12 } = req.query;
+    const { q, category, minPrice, maxPrice, minRating, isFree, page = 1, limit = 12 } = req.query;
 
     // Validate search query
     if (!q || q.trim() === '') {
@@ -88,6 +88,7 @@ exports.searchBooks = async (req, res, next) => {
       minPrice: minPrice ? parseFloat(minPrice) : undefined,
       maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
       minRating: minRating ? parseFloat(minRating) : undefined,
+      isFree: isFree || undefined,
       page: parseInt(page) - 1, // Convert to 0-indexed
       limit: parseInt(limit),
     };
@@ -129,6 +130,10 @@ exports.searchBooks = async (req, res, next) => {
       if (!isNaN(minRating) && minRating > 0) {
         totalCountQuery.rating = { $gte: minRating };
       }
+    }
+
+    if (filters.isFree === 'true') {
+      totalCountQuery.isFree = true;
     }
 
     const totalCount = await Book.countDocuments(totalCountQuery);

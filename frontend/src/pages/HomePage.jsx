@@ -13,6 +13,7 @@ const HomePage = () => {
   const { user } = useAuth();
   const [featured, setFeatured] = useState([]);
   const [trending, setTrending] = useState([]);
+  const [freeBooks, setFreeBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,14 +29,16 @@ const HomePage = () => {
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const [featuredRes, trendingRes, categoriesRes] = await Promise.all([
+        const [featuredRes, trendingRes, freeBooksRes, categoriesRes] = await Promise.all([
           bookAPI.getFeaturedBooks(),
           bookAPI.getTrendingBooks(),
+          bookAPI.getAllBooks({ isFree: true, limit: 4 }),
           bookAPI.getCategories(),
         ]);
 
         setFeatured(featuredRes.data.books);
         setTrending(trendingRes.data.books);
+        setFreeBooks(freeBooksRes.data.books || []);
         setCategories(categoriesRes.data.categories);
       } catch (error) {
         console.error('Error fetching home data:', error);
@@ -200,6 +203,45 @@ const HomePage = () => {
                 Trending Now
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Free Resources Section */}
+      <section className="py-16 bg-slate-950">
+        <div className="container-custom">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-bold text-white">Free Learning Resources</h2>
+              <p className="mt-3 text-slate-300 max-w-2xl">
+                Explore a curated selection of free trial books and start learning immediately without any cost.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/books?isFree=true')}
+              className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/20 hover:bg-indigo-700 transition"
+            >
+              Browse All Free Books
+              <FiArrowRight />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {freeBooks.length > 0 ? (
+              freeBooks.map((book) => (
+                <BookCard
+                  key={book._id}
+                  book={book}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                  onNavigate={navigate}
+                />
+              ))
+            ) : (
+              <div className="col-span-full rounded-3xl bg-slate-900 p-10 text-center text-slate-300">
+                Free resources are loading or not available. Please check back soon.
+              </div>
+            )}
           </div>
         </div>
       </section>

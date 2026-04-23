@@ -13,6 +13,7 @@ Users can browse books, manage carts, and interact with a dynamic backend API.
 * ⚡ Fast React frontend
 * 🌐 REST API backend (Node.js + Express)
 * 🗄️ MongoDB database integration
+* 🎁 Free learning resources & trial enrollment for selected books
 
 ---
 
